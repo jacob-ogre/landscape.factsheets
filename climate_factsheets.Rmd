@@ -1,0 +1,45 @@
+---
+title: "Climate Factsheets"
+author: "Defenders of Wildlife"
+date: "11/3/2017"
+output: html_document
+---
+
+<style>
+  a {
+    font-size: larger;
+  }
+  
+  .col2 {
+    columns: 2 200px;         /* number of columns and width in pixels*/
+    -webkit-columns: 2 200px; /* chrome, safari */
+    -moz-columns: 2 200px;    /* firefox */
+  }
+</style>
+
+This is a simple listing of fact sheets about various wildlife species especially 
+vulnerable to climate change created by the Landscape Conservation Department at [Defenders of Wildlife](http://www.defenders.org):
+
+```{r make_tab, echo = FALSE}
+files <- list.files(pattern = "pdf")
+spp <- gsub(files, pattern = "ClimateChangeFS_|_v2|\\.pdf", replacement = "")
+spp <- gsub(spp, pattern = "_", replacement = " ")
+urls <- paste0("https://cci-dev.org/landscape/climate-factsheets/", files)
+as <- lapply(
+  seq_along(urls), 
+  function(x) htmltools::HTML(
+    paste0("<a href='", urls[x], "'>", spp[x], "</a>")
+  )
+)
+df <- data.frame(species = unlist(as), stringsAsFactors = FALSE)
+```
+
+<div class="col2">
+```{r render_tab, echo = FALSE, warning=FALSE, error=FALSE}
+knitr::kable(df$species, row.names = FALSE)
+```
+</div>
+
+
+<br><hr><br>
+
